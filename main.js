@@ -1,18 +1,20 @@
 //included libs
 var uinput = require('./lib/uinput');
 var keycodes = require('./lib/keycodes')
+var mapping = require('./mapping_keyboard');
 var virtual_keyboard = require('./lib/virtual_keyboard');
-var gpmap = require('./gamepad_map');
 
-//npm libs
+//I2C Lib
 var i2c = require('i2c');
 
+//I2C Setup
 var address = 0x52;
 var wire = new i2c(address, {device: '/dev/i2c-1'});
 
+//Virtual Keyboard
 var kb = new virtual_keyboard;
-var mapping = require('./mapping_keyboard');
 
+//OldKey Var
 var oldKey;
 
 function getKeyFromBytes(bytes) {
@@ -51,29 +53,13 @@ function getKeyFromBytes(bytes) {
     }
 }
 
-function main() {
-    console.log('Starting Up...');
-
-    kb.connect(function() {
-        console.log('Keyboard Connected!');
-        //setTimeout(function() {
-            writeI2CtoKeyboard(50)
-        //}, 50);
-    
-    });
+function sendKey(key, value) {
+    kb.sendEvent({type: uinput.EV_KEY, code: key, value:value});
 }
 
 function writeI2CtoKeyboard(delay) {
-
-    //console.log('MAP ' + JSON.stringify(gamePadToKeyMap) );
-
-    setInterval(function () {
-        
+    setInterval(function () {        
         wire.read(6, function(err, res) {
-            //console.log('RAW ' + res);
-            //console.log('Current ' + getKeyFromBytes(res))
-            //console.log('Old ' + getKeyFromBytes(oldKey))
-
             if(res[0] == 0 ) {
                 if(getKeyFromBytes(oldKey) != getKeyFromBytes(res)) {
                     sendKey(getKeyFromBytes(oldKey), 0);
@@ -87,11 +73,15 @@ function writeI2CtoKeyboard(delay) {
                 oldKey = res;
             }
         });
-    }, delay); // repeat forever, polling every 3 seconds
+    }, delay);
 }
 
-function sendKey(key, value) {
-    kb.sendEvent({type: uinput.EV_KEY, code: key, value:value});
+function main() {
+    console.log('Starting Up...');
+    kb.connect(function() {
+        console.log('Keyboard Connected!');
+        writeI2CtoKeyboard(50)
+    });
 }
 
 main();
