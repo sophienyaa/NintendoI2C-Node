@@ -111,7 +111,7 @@ function writeI2CtoKeyboard(delay) {
 
         wire.read(6, function(err, res) {
 
-            if(res != undefined) {
+            if(typeof res != 'undefined') {
                 if (res[0] != 255 && res[1] != 255) {
         
                     var newButtons = getKeysFromBytes(res);
