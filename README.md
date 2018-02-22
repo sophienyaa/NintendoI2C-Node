@@ -4,11 +4,11 @@ An attempt to build a daemon for a Nintendo Classic Mini controller (and maybe o
 
 These controllers use the standard I2C protocol to communicate and thus can be read by a Raspberry Pi using its I2C bus.
 
-This project uses work from [Node Virtual Gamepads](https://github.com/miroof/node-virtual-gamepads) by [miroof](https://github.com/miroof)
+This project uses work from [Node Virtual Gamepads](https://github.com/miroof/node-virtual-gamepads) by [miroof](https://github.com/miroof).
 
 ## Connecting to the Raspberry Pi
 
-Connecting the controller is simple, you can either cut off the plug and wire directly, or use an adapter such as this one from [adafruit](https://www.adafruit.com/product/345)
+Connecting the controller is simple, you can either cut off the plug and wire directly, or use an adapter such as this one from [adafruit](https://www.adafruit.com/product/345).
 
 There are four wires that need to be connected;
 
@@ -21,17 +21,17 @@ The pinout is as per below;
 
 ![pinout](http://img.gunook.com/upload/9/f4/9f466e4b21882a5473c0a61a77a5f166.jpg)
 
-and a pinout for the Raspberry Pi is available at [here](https://pinout.xyz/pinout/i2c)
+and a pinout for the Raspberry Pi is available at [here](https://pinout.xyz/pinout/i2c).
 
 I found a cheap controller called a "Gioteck Nintendo Mini" These can be had in the UK from from Poundland, Argos, Ebay and similar.
 
-I got mine for £5 from Poundland and it is what I am using for testing, as it was so cheap I opted to cut the plug off and add header sockets to plug directy linto the Raspebrry Pi. You can also find them on [ebay](https://www.ebay.co.uk/itm/Gioteck-Turbo-Controller-for-Nintendo-Classic-Mini-From-the-Argos-Shop-on-ebay/362156662685?epid=719581866&hash=item5452381f9d:g:9uUAAOSwXz9Zk3ZV)
+I got mine for £5 from Poundland and it is what I am using for testing, as it was so cheap I opted to cut the plug off and add header sockets to plug directy linto the Raspebrry Pi. You can also find them on [ebay](https://www.ebay.co.uk/itm/Gioteck-Turbo-Controller-for-Nintendo-Classic-Mini-From-the-Argos-Shop-on-ebay/362156662685?epid=719581866&hash=item5452381f9d:g:9uUAAOSwXz9Zk3ZV).
 
 ## Building and using the daemon
 
-You will need NodeJS installed on your Raspberry Pi before you can use this package, for instructions on how to do that go [here](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/)
+You will need NodeJS installed on your Raspberry Pi before you can use this package, for instructions on how to do that go [here](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/).
 
-You will also need to have the i2c bus enabled and the controller connected, follow the instructions [here](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c) to do this. The controller should show at address 0x52 and 0x54
+You will also need to have the i2c bus enabled and the controller connected, follow the instructions [here](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c) to do this. The controller should show at address 0x52 and 0x54.
 
 Once you've got NodeJS setup and the controller connected and detected, you can follow the below instructions;
 
