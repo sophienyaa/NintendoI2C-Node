@@ -147,6 +147,7 @@ function writeI2CtoKeyboard(delay) {
             }
             if(newButtons.B.value != oldButtons.B.value) {
                 console.log(res);
+                console.log(res[0] + ' ' + res[1] );
                 console.log('B CHANGED')
                 sendKeys(newButtons.B.key, newButtons.B.value);
             }
