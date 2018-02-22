@@ -111,7 +111,7 @@ function writeI2CtoKeyboard(delay) {
 
         wire.read(6, function(err, res) {
 
-            console.log(res.length);
+            console.log(res[0]);
 
             if (res[0] != 255 && res[1] != 255) {
         
