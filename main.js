@@ -23,9 +23,7 @@ function getKeysFromBytes(bytes) {
         'SELECT':{'key':mapping.GP_SELECT, 'value':0},
         'START':{'key':mapping.GP_START, 'value':0},
     };
-    /*if(bytes == undefined) {
-        return buttons;
-    } */
+
     //DIRECTIONAL - Single
     if(bytes[5] === 254) { //UP
         buttons.UP.value = 1;
@@ -115,8 +113,6 @@ function writeI2CtoKeyboard(delay) {
             
             if(res.length == 6) {
                 if (res[0] != 1 && (res[0] != 255 && res[1] != 255)) {
-        
-                    console.log(oldRes);
                     var newButtons = getKeysFromBytes(res);
                     var oldButtons = getKeysFromBytes(oldRes);
 
