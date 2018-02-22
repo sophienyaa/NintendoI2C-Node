@@ -108,7 +108,7 @@ function getKeysFromBytes(bytes) {
 }
 
 function writeI2CtoKeyboard(delay) {
-    var oldRes;
+    var oldRes = [255,255,255,255,255,255];
     setInterval(function () {
 
         wire.read(6, function(err, res) {
