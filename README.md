@@ -43,13 +43,15 @@ You then map these keys in your application or emulator and you can use the cont
 
 ### Default Key Mappings
 
-* Dpad Up - Keyboard Up Arrow
-* Dpad Down -  Keyboard Down Arrow
-* Dpad Left - Keyboard Left Arrow
-* Dpad Right - Keyboard Right Arrow
-* Start - Keyboard "1" Key
-* Select - Keyboard "2" Key
-* A - Keyboard "Z" Key
-* B - Keyboard "X" Key
+|Button | Keyboard Key |
+|-------|---------------|
+Dpad Up | Up Arrow |
+Dpad Down | Down Arrow | 
+Dpad Left | Left Arrow |
+Dpad Right | Right Arrow |
+Start |  "1" Key |
+Select | "2" Key |
+A | "Z" Key |
+B | "X" Key |
 
 These mappings can be changed by editing `mapping_keyboard.js`
