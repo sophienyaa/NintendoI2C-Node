@@ -28,14 +28,14 @@ function getKeysFromBytes(bytes) {
         buttons.HEARTBEAT = true;
         return buttons;
     }
-    if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
-        return buttons;
-    }
-    if(bytes[0] == 255 ) { //heartbeat of all 255 every 8 sec
-        console.log('heartbeat');
+    if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
         buttons.HEARTBEAT = true;
         return buttons;
     }
+    if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
+        return buttons;
+    }
+ 
 
 
     //DIRECTIONAL - Single
@@ -146,8 +146,6 @@ function writeI2CtoKeyboard(delay) {
                 sendKeys(newButtons.A.key, newButtons.A.value);
             }
             if(newButtons.B.value != oldButtons.B.value) {
-                console.log(res);
-                console.log(res[0]);
                 console.log('B CHANGED')
                 sendKeys(newButtons.B.key, newButtons.B.value);
             }
