@@ -24,18 +24,6 @@ function getKeysFromBytes(bytes) {
         'SELECT':{'key':mapping.GP_SELECT, 'value':0},
         'START':{'key':mapping.GP_START, 'value':0},
     };
-    if(bytes === undefined || bytes === null) { //undefined or null or otherwise
-        return null;
-    }
-    if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
-        return null;
-    }
-    //if(bytes[4] === 1 && bytes[5] === 1) { //heartbeat of all 255 every 8 sec
-    //    return null;
-    //}
-    if(bytes[0] = 0 && bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
-        return buttons;
-    }
  
     //DIRECTIONAL - Single
     if(bytes[5] === 254) { //UP
@@ -110,6 +98,7 @@ function getKeysFromBytes(bytes) {
         buttons.SELECT.value = 1;
         buttons.DOWN.value = 1;
     }
+    //TODO: A & B
   
     return buttons;
 }
@@ -119,6 +108,7 @@ function writeI2CtoKeyboard(delay) {
     setInterval(function () {
         wire.read(6, function(err, res) {
 
+        
         var newButtons = getKeysFromBytes(res);
         var oldButtons = getKeysFromBytes(oldRes);
 

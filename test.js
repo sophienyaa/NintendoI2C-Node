@@ -115,7 +115,7 @@ function writeI2CtoKeyboard(delay) {
 
     setInterval(function () {
         wire.read(6, function(err, res) {
-            var buttons = getKeysFromBytes(res);
+            /*var buttons = getKeysFromBytes(res);
             if(buttons != null) {
                 sendKeys(buttons.UP.key, buttons.UP.value);
                 sendKeys(buttons.DOWN.key, buttons.DOWN.value);
@@ -125,7 +125,8 @@ function writeI2CtoKeyboard(delay) {
                 sendKeys(buttons.B.key, buttons.B.value);
                 sendKeys(buttons.SELECT.key, buttons.SELECT.value);
                 sendKeys(buttons.START.key, buttons.START.value);
-            }
+            }*/
+            console.log(res);
 
         });
     }, delay);
@@ -141,7 +142,7 @@ function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(10) //delay in ms
+        writeI2CtoKeyboard(1000) //delay in ms
     });
 }
 
