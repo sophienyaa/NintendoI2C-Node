@@ -115,7 +115,7 @@ function writeI2CtoKeyboard(delay) {
 
     setInterval(function () {
         wire.read(6, function(err, res) {
-            if(res != null || res != undefined || (res[0] == 255 && res[1] == 255) ) {
+            if(res != null || res != undefined || (res[0] != 255 && res[1] != 255) ) {
                 console.log(res);
             }
         });
