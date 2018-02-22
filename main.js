@@ -23,16 +23,16 @@ function getKeysFromBytes(bytes) {
         'SELECT':{'key':mapping.GP_SELECT, 'value':0},
         'START':{'key':mapping.GP_START, 'value':0},
     };
-
+    if(bytes === undefined || bytes === null) { //undefined or null or otherwise
+        return buttons;
+    }
     if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
         return buttons;
     }
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
         return buttons;
     }
-    if(bytes === undefined || bytes === null) { //undefined or null or otherwise
-        return buttons;
-    }
+
 
     //DIRECTIONAL - Single
     if(bytes[5] === 254) { //UP
