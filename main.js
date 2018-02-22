@@ -32,7 +32,7 @@ function getKeysFromBytes(bytes) {
         buttons.HEARTBEAT = true;
         return buttons;
     }
-    if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
+    if(bytes[0] = 0 && bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
         return buttons;
     }
  
