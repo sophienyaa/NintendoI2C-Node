@@ -110,9 +110,8 @@ function writeI2CtoKeyboard(delay) {
     setInterval(function () {
 
         wire.read(6, function(err, res) {
+            console.log(res);
 
-            console.log(res[5]);
-        if(res[5] != undefined) {
             if (res[0] != 255 && res[1] != 255) {
         
                     var newButtons = getKeysFromBytes(res);
@@ -155,7 +154,6 @@ function writeI2CtoKeyboard(delay) {
                     }
                     oldRes = res;
                 }
-            }
         });
     }, delay);
 }
