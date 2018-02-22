@@ -25,6 +25,9 @@ function getKeysFromBytes(bytes) {
     };
 
     console.log(bytes);
+    if(bytes == undefined) {
+        return buttons;
+    }
  
     //DIRECTIONAL - Single
     if(bytes[5] === 254) { //UP
