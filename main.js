@@ -14,6 +14,7 @@ var wire = new i2c(address, {device: '/dev/i2c-1'});
 function getKeysFromBytes(bytes) { 
     //TODO: move byte mappings
     var buttons = {
+        'HEARTBEAT': false,
         'UP':{'key':mapping.GP_UP, 'value':0},
         'DOWN':{'key':mapping.GP_DOWN, 'value':0},
         'LEFT':{'key':mapping.GP_LEFT, 'value':0},
@@ -24,12 +25,14 @@ function getKeysFromBytes(bytes) {
         'START':{'key':mapping.GP_START, 'value':0},
     };
     if(bytes === undefined || bytes === null) { //undefined or null or otherwise
+        buttons.HEARTBEAT = true;
         return buttons;
     }
     if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
         return buttons;
     }
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
+        buttons.HEARTBEAT = true;
         return buttons;
     }
 
@@ -121,6 +124,7 @@ function writeI2CtoKeyboard(delay) {
 
             console.log('NEW: ' + JSON.stringify(newButtons));
             console.log('OLD: ' + JSON.stringify(oldButtons));
+        if(newButtons.HEARTBEAT == false) {
 
             if(newButtons.UP.value != oldButtons.UP.value) {
                 console.log('UP CHANGED')
@@ -147,6 +151,8 @@ function writeI2CtoKeyboard(delay) {
             if(newButtons.START.value != oldButtons.START.value) {
                 sendKeys(newButtons.START.key, newButtons.START.value);
             }
+        
+        }
 
             oldRes = res;
         });
