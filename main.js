@@ -1,88 +1,148 @@
 //included libs
 var uinput = require('./lib/uinput');
 var keycodes = require('./lib/keycodes')
-var mapping = require('./mapping_keyboard');
 var virtual_keyboard = require('./lib/virtual_keyboard');
-
-//I2C Lib
-var i2c = require('i2c');
-
-//I2C Setup
-var address = 0x52;
-var wire = new i2c(address, {device: '/dev/i2c-1'});
-
-//Virtual Keyboard
+var mapping = require('./mapping_keyboard');
 var kb = new virtual_keyboard;
 
-//OldKey Var
-var oldKey;
+//i2c libs
+var i2c = require('i2c');
+var address = 0x52; //default address of controller
+var wire = new i2c(address, {device: '/dev/i2c-1'});
 
-function getKeyFromBytes(bytes) {
-    if(bytes == undefined) {
-        return 0;
+//We can do a max of two keys at a time, its a NES pad so this is probably fine
+function getKeysFromBytes(bytes) { 
+    //TODO: move byte mappings
+    var buttons = {
+        'UP':{'key':mapping.GP_UP, 'value':0},
+        'DOWN':{'key':mapping.GP_DOWN, 'value':0},
+        'LEFT':{'key':mapping.GP_LEFT, 'value':0},
+        'RIGHT':{'key':mapping.GP_RIGHT, 'value':0},
+        'A':{'key':mapping.GP_A, 'value':0},
+        'B':{'key':mapping.GP_B, 'value':0},
+        'SELECT':{'key':mapping.GP_SELECT, 'value':0},
+        'START':{'key':mapping.GP_START, 'value':0},
+    };
+
+    if(bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
+        return buttons;
     }
-    //DIRECTIONAL
-    if(bytes[5] == 254) {
-        return mapping.GP_UP;
+    if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
+        return null;
     }
-    if(bytes[4] == 191) {
-        return mapping.GP_DOWN;
-    }
-    if(bytes[4] == 127) {
-        return mapping.GP_RIGHT;
-    }
-    if(bytes[5] == 253) {
-        return mapping.GP_LEFT;
+    if(bytes === undefined || bytes === null) { //undefined or null or otherwise
+        return null;
     }
 
-    //BUTTONS
-    if(bytes[4] == 239) {
-        return mapping.GP_SELECT;
+    //DIRECTIONAL - Single
+    if(bytes[5] === 254) { //UP
+        buttons.UP.value = 1;
     }
-    if(bytes[4] == 251) {
-        return mapping.GP_START
+    if(bytes[4] === 191) { //DOWN
+        buttons.DOWN.value = 1;
     }
-    if(bytes[5] == 239) {
-        return mapping.GP_A;
+    if(bytes[5] === 253) { //LEFT
+        buttons.LEFT.value = 1;
     }
-    if(bytes[5] == 191) {
-        return mapping.GP_B;
+    if(bytes[4] === 127) { //RIGHT
+        buttons.RIGHT.value = 1;
     }
-    else {
-        return 0;
-    }
-}
 
-function sendKey(key, value) {
-    kb.sendEvent({type: uinput.EV_KEY, code: key, value:value});
+    //BUTTONS - Single
+    if(bytes[4] === 239) { //SELECT
+        buttons.SELECT.value = 1;
+    }
+    if(bytes[4] === 251) { //START
+        buttons.START.value = 1;
+    }
+    if(bytes[5] === 239) { //A
+        buttons.A.value = 1;
+    }
+    if(bytes[5] === 191) { //B
+        buttons.B.value = 1;
+    }
+
+    //COMBOS - Two keys at once but on the same byte
+    if(bytes[5] === 238) {//A & UP
+        buttons.A.value = 1;
+        buttons.UP.value = 1;
+    } 
+    if(bytes[5] === 190) {//B & UP
+        buttons.B.value = 1;
+        buttons.UP.value = 1;
+    } 
+    if(bytes[4] === 235) {//SELECT & START
+        buttons.SELECT.value = 1;
+        buttons.START.value = 1;
+    }
+    if(bytes[5] === 237) { //A & LEFT
+        buttons.A.value = 1;
+        buttons.LEFT.value = 1;
+    }
+    if(bytes[5] === 189) { //B & LEFT
+        buttons.B.value = 1;
+        buttons.LEFT.value = 1;
+    }
+    if(bytes[5] === 252) { //UP & LEFT
+        buttons.UP.value = 1;
+        buttons.LEFT.value = 1;
+    }
+    if(bytes[4] === 63) {//DOWN & RIGHT
+        buttons.DOWN.value = 1;
+        buttons.RIGHT.value = 1;
+    }
+    if(bytes[4] === 175) {//DOWN & SELECT
+        buttons.DOWN.value = 1;
+        buttons.RIGHT.value = 1;
+    }
+    if(bytes[4] === 187) {//DOWN & START
+        buttons.START.value = 1;
+        buttons.DOWN.value = 1;
+    }
+    if(bytes[4] === 111) {//RIGHT & SELECT
+        buttons.SELECT.value = 1;
+        buttons.RIGHT.value = 1;
+    }
+    if(bytes[4] === 123) {//RIGHT & START
+        buttons.SELECT.value = 1;
+        buttons.DOWN.value = 1;
+    }
+  
+    return buttons;
 }
 
 function writeI2CtoKeyboard(delay) {
-    setInterval(function () {        
+
+    setInterval(function () {
         wire.read(6, function(err, res) {
-            if(res[0] == 0 ) {
-                if(getKeyFromBytes(oldKey) != getKeyFromBytes(res)) {
-                    sendKey(getKeyFromBytes(oldKey), 0);
-                    sendKey(getKeyFromBytes(res), 1);
-                }
-                else {
-                    if(getKeyFromBytes(res) != 0) {
-                        sendKey(getKeyFromBytes(res), 1);
-                    }
-                }
-                oldKey = res;
+            var buttons = getKeysFromBytes(res);
+            if(buttons != null) {
+                sendKeys(buttons.UP.key, buttons.UP.value);
+                sendKeys(buttons.DOWN.key, buttons.DOWN.value);
+                sendKeys(buttons.LEFT.key, buttons.LEFT.value);
+                sendKeys(buttons.RIGHT.key, buttons.RIGHT.value);
+                sendKeys(buttons.A.key, buttons.A.value);
+                sendKeys(buttons.B.key, buttons.B.value);
+                sendKeys(buttons.SELECT.key, buttons.SELECT.value);
+                sendKeys(buttons.START.key, buttons.START.value);
             }
+
         });
     }, delay);
+}
+
+function sendKeys(key, value) {
+    if(key > 0) {
+        kb.sendEvent({type: uinput.EV_KEY, code: key, value: value});
+    }
 }
 
 function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(50)
+        writeI2CtoKeyboard(10) //delay in ms
     });
 }
 
 main();
-

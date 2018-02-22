@@ -10,9 +10,9 @@ var i2c = require('i2c');
 var address = 0x52; //default address of controller
 var wire = new i2c(address, {device: '/dev/i2c-1'});
 
-//can do a max of two keys at a time, its a NES pad so this is probably fine
+//We can do a max of two keys at a time, its a NES pad so this is probably fine
 function getKeysFromBytes(bytes) { 
-
+    //TODO: move byte mappings
     var buttons = {
         'UP':{'key':mapping.GP_UP, 'value':0},
         'DOWN':{'key':mapping.GP_DOWN, 'value':0},
@@ -62,8 +62,7 @@ function getKeysFromBytes(bytes) {
         buttons.B.value = 1;
     }
 
-    //COMBOS - Two keys at once but on the same byte - n
-    //TODO: more combis
+    //COMBOS - Two keys at once but on the same byte
     if(bytes[5] === 238) {//A & UP
         buttons.A.value = 1;
         buttons.UP.value = 1;
@@ -115,11 +114,7 @@ function getKeysFromBytes(bytes) {
 function writeI2CtoKeyboard(delay) {
 
     setInterval(function () {
-        var newBytes;
-        var oldBytes;
         wire.read(6, function(err, res) {
-
-            console.log('RAW: '+ res);
             var buttons = getKeysFromBytes(res);
             if(buttons != null) {
                 sendKeys(buttons.UP.key, buttons.UP.value);
@@ -146,7 +141,7 @@ function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(1000)    
+        writeI2CtoKeyboard(10) //delay in ms
     });
 }
 
