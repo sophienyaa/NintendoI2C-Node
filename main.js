@@ -153,9 +153,7 @@ function writeI2CtoKeyboard(delay) {
                 console.log('START CHANGED')
                 sendKeys(newButtons.START.key, newButtons.START.value);
             }
-        
         }
-
             oldRes = res;
         });
     }, delay);
@@ -171,7 +169,7 @@ function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(500) //delay in ms
+        writeI2CtoKeyboard(5) //delay in ms
     });
 }
 
