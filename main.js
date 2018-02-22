@@ -118,10 +118,12 @@ function writeI2CtoKeyboard(delay) {
 
             var newButtons = getKeysFromBytes(res);
             var oldButtons = getKeysFromBytes(oldRes);
+
             console.log('NEW: ' + JSON.stringify(newButtons));
             console.log('OLD: ' + JSON.stringify(oldButtons));
 
             if(newButtons.UP.value != oldButtons.UP.value) {
+                console.log('UP CHANGED')
                 sendKeys(newButtons.UP.key, newButtons.UP.value);
             }
             if(newButtons.DOWN.value != oldButtons.DOWN.value) {
