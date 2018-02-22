@@ -31,7 +31,12 @@ function getKeysFromBytes(bytes, newButtons) {
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
         console.log('hb');
         buttons.HEARTBEAT = true;
-        return newButtons;
+        if(newButtons != undefined) {
+            return newButtons;
+        }
+        else {
+            return buttons;
+        }
     }
     if(bytes[0] = 0 && bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
         return buttons;
