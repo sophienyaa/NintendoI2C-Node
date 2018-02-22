@@ -116,6 +116,7 @@ function writeI2CtoKeyboard(delay) {
             if(res.length == 6) {
                 if (res[0] != 1 && (res[0] != 255 && res[1] != 255)) {
         
+                    console.log(oldRes);
                     var newButtons = getKeysFromBytes(res);
                     var oldButtons = getKeysFromBytes(oldRes);
 
