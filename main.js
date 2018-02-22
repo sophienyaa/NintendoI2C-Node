@@ -12,7 +12,7 @@ var wire = new i2c(address, {device: '/dev/i2c-1'});
 
 //We can do a max of two keys at a time, its a NES pad so this is probably fine
 function getKeysFromBytes(bytes) { 
-    //TODO: move byte mappings
+    //TODO: move byte mappings somewhere else
     var buttons = {
         'UP':{'key':mapping.GP_UP, 'value':0},
         'DOWN':{'key':mapping.GP_DOWN, 'value':0},
@@ -106,48 +106,40 @@ function getKeysFromBytes(bytes) {
 }
 
 function writeI2CtoKeyboard(delay) {
-    var oldRes = [255,255,255,255,255,255];
+    var oldRes = [255,255,255,255,255,255]; //populate it so we have no null issues
     setInterval(function () {
 
         wire.read(6, function(err, res) {
             
-            if(res.length == 6) {
-                if (res[0] != 1 && (res[0] != 255 && res[1] != 255)) {
+            if(res.length == 6) { //array needs to be 6bytes
+                if (res[0] != 1 && (res[0] != 255 && res[1] != 255)) { // there are 'heartbeat' pulses, we ignore these
+
                     var newButtons = getKeysFromBytes(res);
                     var oldButtons = getKeysFromBytes(oldRes);
 
                     if(newButtons != null && oldButtons != null) {
-
                         if(newButtons.UP.value != oldButtons.UP.value) {
-                            console.log('UP CHANGED')
                             sendKeys(newButtons.UP.key, newButtons.UP.value);
                         }
                         if(newButtons.DOWN.value != oldButtons.DOWN.value) {
-                            console.log('DOWN CHANGED')
                             sendKeys(newButtons.DOWN.key, newButtons.DOWN.value);
                         }
                         if(newButtons.LEFT.value != oldButtons.LEFT.value) {
-                            console.log('LEFT CHANGED')
                             sendKeys(newButtons.LEFT.key, newButtons.LEFT.value);
                         }
                         if(newButtons.RIGHT.value != oldButtons.RIGHT.value) {
-                            console.log('RIGHT CHANGED')
                             sendKeys(newButtons.RIGHT.key, newButtons.RIGHT.value);
                         }
                         if(newButtons.A.value != oldButtons.A.value) {
-                            console.log('A CHANGED')
                             sendKeys(newButtons.A.key, newButtons.A.value);
                         }
                         if(newButtons.B.value != oldButtons.B.value) {
-                            console.log('B CHANGED')
                             sendKeys(newButtons.B.key, newButtons.B.value);
                         }
                         if(newButtons.SELECT.value != oldButtons.SELECT.value) {
-                            console.log('SELECT CHANGED')
                             sendKeys(newButtons.SELECT.key, newButtons.SELECT.value);
                         }
                         if(newButtons.START.value != oldButtons.START.value) {
-                            console.log('START CHANGED')
                             sendKeys(newButtons.START.key, newButtons.START.value);
                         }
                     }
