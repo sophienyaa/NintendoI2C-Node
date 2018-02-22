@@ -29,7 +29,33 @@ I got mine for £5 from Poundland and it is what I am using for testing, as it w
 
 ## Building and using the daemon
 
-TBC
+You will need NodeJS installed on your Raspberry Pi before you can use this package, for instructions on how to do that go [here](http://thisdavej.com/beginners-guide-to-installing-node-js-on-a-raspberry-pi/)
+
+You will also need to have the i2c bus enabled and the controller connected, follow the instructions [here](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c) to do this. The controller should show at address 0x52 and 0x54
+
+Once you've got NodeJS setup and the controller connected and detected, you can follow the below instructions;
+
+1. Clone the source by running;
+
+`$ git clone https://github.com/mickwheelz/NintendoI2C-Node.git`
+
+2. Change to the directory and install the dependancies by running;
+
+`$ cd NintendoI2C-Node/`
+
+`$ npm install`
+
+3. Now you start the daemon by running;
+
+`$ sudo node main.js`
+
+or if you want it to run in the background
+
+`$ sudo node main.js &`
+
+
+You can also configure it to run at boot
+
 
 ## How it works
 
