@@ -154,7 +154,7 @@ function writeI2CtoKeyboard(delay) {
                     }
                     oldRes = res;
                 }
-            }
+            
         });
     }, delay);
 }
