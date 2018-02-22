@@ -14,7 +14,6 @@ var wire = new i2c(address, {device: '/dev/i2c-1'});
 function getKeysFromBytes(bytes) { 
     //TODO: move byte mappings
     var buttons = {
-        'HEARTBEAT': false,
         'UP':{'key':mapping.GP_UP, 'value':0},
         'DOWN':{'key':mapping.GP_DOWN, 'value':0},
         'LEFT':{'key':mapping.GP_LEFT, 'value':0},
@@ -98,7 +97,10 @@ function getKeysFromBytes(bytes) {
         buttons.SELECT.value = 1;
         buttons.DOWN.value = 1;
     }
-    //TODO: A & B
+    if(bytes[5] === 175) { //A & B
+        buttons.A.value = 1;
+        buttons.B.value = 1;
+    }
   
     return buttons;
 }
@@ -106,49 +108,52 @@ function getKeysFromBytes(bytes) {
 function writeI2CtoKeyboard(delay) {
     var oldRes;
     setInterval(function () {
+
         wire.read(6, function(err, res) {
 
-            if(res != null || res != undefined || (res[0] == 255 && res[1] == 255) ) {
+            if(res != null || res != undefined) {
+                if (res[0] != 255 && res[1] != 255) {
         
-                var newButtons = getKeysFromBytes(res);
-                var oldButtons = getKeysFromBytes(oldRes);
+                    var newButtons = getKeysFromBytes(res);
+                    var oldButtons = getKeysFromBytes(oldRes);
 
-                if(newButtons != null && oldButtons != null) {
+                    if(newButtons != null && oldButtons != null) {
 
-                    if(newButtons.UP.value != oldButtons.UP.value) {
-                        console.log('UP CHANGED')
-                        sendKeys(newButtons.UP.key, newButtons.UP.value);
+                        if(newButtons.UP.value != oldButtons.UP.value) {
+                            console.log('UP CHANGED')
+                            sendKeys(newButtons.UP.key, newButtons.UP.value);
+                        }
+                        if(newButtons.DOWN.value != oldButtons.DOWN.value) {
+                            console.log('DOWN CHANGED')
+                            sendKeys(newButtons.DOWN.key, newButtons.DOWN.value);
+                        }
+                        if(newButtons.LEFT.value != oldButtons.LEFT.value) {
+                            console.log('LEFT CHANGED')
+                            sendKeys(newButtons.LEFT.key, newButtons.LEFT.value);
+                        }
+                        if(newButtons.RIGHT.value != oldButtons.RIGHT.value) {
+                            console.log('RIGHT CHANGED')
+                            sendKeys(newButtons.RIGHT.key, newButtons.RIGHT.value);
+                        }
+                        if(newButtons.A.value != oldButtons.A.value) {
+                            console.log('A CHANGED')
+                            sendKeys(newButtons.A.key, newButtons.A.value);
+                        }
+                        if(newButtons.B.value != oldButtons.B.value) {
+                            console.log('B CHANGED')
+                            sendKeys(newButtons.B.key, newButtons.B.value);
+                        }
+                        if(newButtons.SELECT.value != oldButtons.SELECT.value) {
+                            console.log('SELECT CHANGED')
+                            sendKeys(newButtons.SELECT.key, newButtons.SELECT.value);
+                        }
+                        if(newButtons.START.value != oldButtons.START.value) {
+                            console.log('START CHANGED')
+                            sendKeys(newButtons.START.key, newButtons.START.value);
+                        }
                     }
-                    if(newButtons.DOWN.value != oldButtons.DOWN.value) {
-                        console.log('DOWN CHANGED')
-                        sendKeys(newButtons.DOWN.key, newButtons.DOWN.value);
-                    }
-                    if(newButtons.LEFT.value != oldButtons.LEFT.value) {
-                        console.log('LEFT CHANGED')
-                        sendKeys(newButtons.LEFT.key, newButtons.LEFT.value);
-                    }
-                    if(newButtons.RIGHT.value != oldButtons.RIGHT.value) {
-                        console.log('RIGHT CHANGED')
-                        sendKeys(newButtons.RIGHT.key, newButtons.RIGHT.value);
-                    }
-                    if(newButtons.A.value != oldButtons.A.value) {
-                        console.log('A CHANGED')
-                        sendKeys(newButtons.A.key, newButtons.A.value);
-                    }
-                    if(newButtons.B.value != oldButtons.B.value) {
-                        console.log('B CHANGED')
-                        sendKeys(newButtons.B.key, newButtons.B.value);
-                    }
-                    if(newButtons.SELECT.value != oldButtons.SELECT.value) {
-                        console.log('SELECT CHANGED')
-                        sendKeys(newButtons.SELECT.key, newButtons.SELECT.value);
-                    }
-                    if(newButtons.START.value != oldButtons.START.value) {
-                        console.log('START CHANGED')
-                        sendKeys(newButtons.START.key, newButtons.START.value);
-                    }
-                }
                     oldRes = res;
+                }
             }
         });
     }, delay);

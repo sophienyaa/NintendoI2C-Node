@@ -87,6 +87,10 @@ function getKeysFromBytes(bytes) {
         buttons.UP.value = 1;
         buttons.LEFT.value = 1;
     }
+    if(bytes[5] === 175) { //A & B
+        buttons.A.value = 1;
+        buttons.B.value = 1;
+    }
     if(bytes[4] === 63) {//DOWN & RIGHT
         buttons.DOWN.value = 1;
         buttons.RIGHT.value = 1;
@@ -107,7 +111,7 @@ function getKeysFromBytes(bytes) {
         buttons.SELECT.value = 1;
         buttons.DOWN.value = 1;
     }
-  
+
     return buttons;
 }
 
