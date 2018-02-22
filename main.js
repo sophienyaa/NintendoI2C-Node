@@ -30,6 +30,7 @@ function getKeysFromBytes(bytes) {
     }
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
         console.log('hb');
+        console.log(buttons)
         buttons.HEARTBEAT = true;
         return buttons;
     }
