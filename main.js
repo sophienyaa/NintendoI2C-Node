@@ -28,10 +28,10 @@ function getKeysFromBytes(bytes) {
         return buttons;
     }
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
-        return null;
+        return buttons;
     }
     if(bytes === undefined || bytes === null) { //undefined or null or otherwise
-        return null;
+        return buttons;
     }
 
     //DIRECTIONAL - Single
@@ -112,21 +112,39 @@ function getKeysFromBytes(bytes) {
 }
 
 function writeI2CtoKeyboard(delay) {
-
+    var oldRes;
     setInterval(function () {
         wire.read(6, function(err, res) {
-            var buttons = getKeysFromBytes(res);
-            if(buttons != null) {
-                sendKeys(buttons.UP.key, buttons.UP.value);
-                sendKeys(buttons.DOWN.key, buttons.DOWN.value);
-                sendKeys(buttons.LEFT.key, buttons.LEFT.value);
-                sendKeys(buttons.RIGHT.key, buttons.RIGHT.value);
-                sendKeys(buttons.A.key, buttons.A.value);
-                sendKeys(buttons.B.key, buttons.B.value);
-                sendKeys(buttons.SELECT.key, buttons.SELECT.value);
-                sendKeys(buttons.START.key, buttons.START.value);
+
+            var newButtons = getKeysFromBytes(res);
+            var oldButtons = getKeysFromBytes(oldRes);
+
+            if(newButtons.UP.value != oldButtons.UP.value) {
+                sendKeys(newButtons.UP.key, newButtons.UP.value);
+            }
+            if(newButtons.DOWN.value != oldButtons.DOWN.value) {
+                sendKeys(newButtons.DOWN.key, newButtons.DOWN.value);
+            }
+            if(newButtons.LEFT.value != oldButtons.LEFT.value) {
+                sendKeys(newButtons.LEFT.key, newButtons.LEFT.value);
+            }
+            if(newButtons.RIGHT.value != oldButtons.RIGHT.value) {
+                sendKeys(newButtons.RIGHT.key, newButtons.RIGHT.value);
+            }
+            if(newButtons.A.value != oldButtons.A.value) {
+                sendKeys(newButtons.A.key, newButtons.A.value);
+            }
+            if(newButtons.B.value != oldButtons.B.value) {
+                sendKeys(newButtons.B.key, newButtons.B.value);
+            }
+            if(newButtons.SELECT.value != oldButtons.SELECT.value) {
+                sendKeys(newButtons.SELECT.key, newButtons.SELECT.value);
+            }
+            if(newButtons.START.value != oldButtons.START.value) {
+                sendKeys(newButtons.START.key, newButtons.START.value);
             }
 
+            oldRes = res;
         });
     }, delay);
 }
