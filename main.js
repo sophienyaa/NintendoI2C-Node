@@ -118,8 +118,8 @@ function writeI2CtoKeyboard(delay) {
 
             var newButtons = getKeysFromBytes(res);
             var oldButtons = getKeysFromBytes(oldRes);
-            console.log('NEW: ' + newButtons);
-            console.log('OLD: ' + oldButtons);
+            console.log('NEW: ' + JSON.stringify(newButtons));
+            console.log('OLD: ' + JSON.stringify(oldButtons));
 
             if(newButtons.UP.value != oldButtons.UP.value) {
                 sendKeys(newButtons.UP.key, newButtons.UP.value);
@@ -161,7 +161,7 @@ function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(10) //delay in ms
+        writeI2CtoKeyboard(500) //delay in ms
     });
 }
 
