@@ -47,11 +47,7 @@ Once you've got NodeJS setup and the controller connected and detected, you can 
 
 3. Now you start the daemon by running;
 
-`$ sudo node main.js`
-
-or if you want it to run in the background
-
-`$ sudo node main.js &`
+`$ sudo node main.js` or if you want it to run in the background `$ sudo node main.js &`
 
 
 You can also configure it to run at boot
