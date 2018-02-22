@@ -138,7 +138,7 @@ function main() {
     console.log('Starting Up...');
     kb.connect(function() {
         console.log('Keyboard Connected!');
-        writeI2CtoKeyboard(1000) //delay in ms
+        writeI2CtoKeyboard(5) //delay in ms
     });
 }
 
