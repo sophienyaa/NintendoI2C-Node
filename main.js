@@ -11,7 +11,7 @@ var address = 0x52; //default address of controller
 var wire = new i2c(address, {device: '/dev/i2c-1'});
 
 //We can do a max of two keys at a time, its a NES pad so this is probably fine
-function getKeysFromBytes(bytes) { 
+function getKeysFromBytes(bytes, newButtons) { 
     //TODO: move byte mappings
     var buttons = {
         'HEARTBEAT': false,
@@ -31,8 +31,7 @@ function getKeysFromBytes(bytes) {
     if(bytes[0] === 255 && bytes[1] === 255) { //heartbeat of all 255 every 8 sec
         console.log('hb');
         buttons.HEARTBEAT = true;
-        console.log(buttons)
-        return buttons;
+        return newButtons;
     }
     if(bytes[0] = 0 && bytes[4] === 255 && bytes[5] === 255) { //255 and 255 for 5/6th byte is no buttons
         return buttons;
@@ -123,7 +122,7 @@ function writeI2CtoKeyboard(delay) {
         wire.read(6, function(err, res) {
 
         var newButtons = getKeysFromBytes(res);
-        var oldButtons = getKeysFromBytes(oldRes);
+        var oldButtons = getKeysFromBytes(oldRes, newButtons);
 
         if(newButtons.HEARTBEAT === false) {
 
