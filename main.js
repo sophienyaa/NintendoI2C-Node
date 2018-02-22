@@ -23,6 +23,8 @@ function getKeysFromBytes(bytes) {
         'SELECT':{'key':mapping.GP_SELECT, 'value':0},
         'START':{'key':mapping.GP_START, 'value':0},
     };
+
+    console.log(bytes);
  
     //DIRECTIONAL - Single
     if(bytes[5] === 254) { //UP
@@ -110,7 +112,7 @@ function writeI2CtoKeyboard(delay) {
     setInterval(function () {
 
         wire.read(6, function(err, res) {
-            console.log(res);
+            //console.log(res);
 
             if (res[0] != 255 && res[1] != 255) {
         
